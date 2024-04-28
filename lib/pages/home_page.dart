@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         body: ListView.builder(
           itemCount: notesRepository.notes.length,
           itemBuilder: (context, index) => NoteTile(
+            key: Key(notesRepository.notes[index].id.toString()),
             title: notesRepository.notes[index].title,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CreateNotePage(
@@ -62,6 +63,9 @@ class _HomePageState extends State<HomePage> {
                         fetchNotes();
                       });
                     }))),
+            dismissed: () {
+              notesRepository.deleteNote(notesRepository.notes[index].id);
+            },
           ),
         ));
   }

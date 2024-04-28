@@ -64,6 +64,7 @@ class CreateNotePage extends StatelessWidget {
                     cursorColor: Colors.black,
                     maxLines: 1000,
                     decoration: const InputDecoration(
+                        focusColor: Colors.black,
                         hintText: "Note text...",
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
