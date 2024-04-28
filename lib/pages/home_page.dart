@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sql_notes/models/note.dart';
+import 'package:sql_notes/repositories/models/note.dart';
+import 'package:sql_notes/repositories/models/sqlHelper.dart';
 import 'package:sql_notes/pages/create_note_page.dart';
+import 'package:sql_notes/repositories/notes_repository.dart';
 import 'package:sql_notes/widgets/note_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,10 +13,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final NotesRepository notesRepository = NotesRepository();
+
+  void fetchNotes() async {
+    await notesRepository.loadNotes();
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchNotes();
   }
 
   @override
@@ -30,7 +40,8 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => CreateNotePage(
                             onCreate: (note) {
                               setState(() {
-                                Note.addNote(note);
+                                notesRepository.addNote(note.title, note.body);
+                                fetchNotes();
                               });
                             },
                           )));
@@ -39,15 +50,16 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: ListView.builder(
-          itemCount: Note.notes.length,
+          itemCount: notesRepository.notes.length,
           itemBuilder: (context, index) => NoteTile(
-            title: Note.notes[index].title,
+            title: notesRepository.notes[index].title,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CreateNotePage(
-                    note: Note.notes[index],
+                    note: notesRepository.notes[index],
                     onCreate: (note) {
                       setState(() {
-                        Note.updateNote(note);
+                        notesRepository.updateNote(note);
+                        fetchNotes();
                       });
                     }))),
           ),

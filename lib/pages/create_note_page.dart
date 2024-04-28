@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sql_notes/models/note.dart';
-import 'package:sql_notes/models/sqlHelper.dart';
+import 'package:sql_notes/repositories/models/note.dart';
+import 'package:sql_notes/repositories/models/sqlHelper.dart';
 
 class CreateNotePage extends StatelessWidget {
   CreateNotePage({super.key, required this.onCreate, this.note}) {
@@ -21,16 +21,13 @@ class CreateNotePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           foregroundColor: Colors.white,
-          title: const Text("New Note"),
+          title: Text("${note?.id}"),
           actions: [
             IconButton(
                 onPressed: () async {
                   if (note == null) {
-                    final id = await SQLHelper.createNote(
-                        _titleController.text, _bodyController.text);
-
                     note = Note(
-                      id: id,
+                      id: 0,
                       title: _titleController.text,
                       body: _bodyController.text,
                       // importance: Importance.regular
